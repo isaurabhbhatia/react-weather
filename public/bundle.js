@@ -25925,22 +25925,42 @@
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      temp: 23,
-	      location: 'Mexico City'
+	      isLoading: false
 	    };
 	  },
 	  handleSearch: function handleSearch(location) {
 	    var that = this;
+	    that.setState({ isLoading: true });
 	    openWeatherMap.getTemp(location = location).then(function (temp) {
 	      that.setState({
 	        temp: temp,
-	        location: location
+	        location: location,
+	        isLoading: false
 	      });
 	    }, function (errorMessage) {
+	      that.setState({ isLoading: false });
 	      alert(errorMessage);
 	    });
 	  },
 	  render: function render() {
+	    var _state = this.state,
+	        isLoading = _state.isLoading,
+	        temp = _state.temp,
+	        location = _state.location;
+
+
+	    var renderMessage = function renderMessage() {
+	      if (isLoading) {
+	        return React.createElement(
+	          'h3',
+	          null,
+	          'Fetching Weather...'
+	        );
+	      } else if (temp && location) {
+	        return React.createElement(WeatherMessage, { data: { 'temp': temp, 'location': location } });
+	      }
+	    };
+
 	    return React.createElement(
 	      'div',
 	      null,
@@ -25950,7 +25970,7 @@
 	        'Weather Component'
 	      ),
 	      React.createElement(WeatherForm, { onSearch: this.handleSearch }),
-	      React.createElement(WeatherMessage, { data: this.state })
+	      renderMessage()
 	    );
 	  }
 	});
@@ -26019,7 +26039,7 @@
 	        null,
 	        'It is ',
 	        temp,
-	        ' in ',
+	        ' F in ',
 	        location,
 	        '.'
 	      )
@@ -26037,7 +26057,7 @@
 
 	var axios = __webpack_require__(244);
 
-	var OPEN_WEATHER_MAP_API = 'http://api.openweathermap.org/data/2.5/weather?appid=d658316794af90f7c46a4c9ac84f10e2';
+	var OPEN_WEATHER_MAP_API = 'http://api.openweathermap.org/data/2.5/weather?appid=d658316794af90f7c46a4c9ac84f10e2&units=imperial';
 
 	module.exports = {
 	  getTemp: function getTemp(location) {
