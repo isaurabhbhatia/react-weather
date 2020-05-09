@@ -13,7 +13,7 @@ module.exports ={
         return res.data.main.temp;
       }
 
-    }, function (response) {
+    }, function (res) {
       throw new Error(res.data.message);
     });
   }
